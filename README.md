@@ -16,8 +16,8 @@ For CUDA:
 - Windows(MSVC): `nvcc matrixAdd_cuda.cu -o matrixAdd_cuda.exe -Xcompiler /openmp`
 
 For OpenMP:
-- Linux(GCC): `g++ matrixAdd_omp.cpp -o matrixAdd_omp -fopenmp`
-- Windows(MinGW): `g++ matrixAdd_omp.cpp -o matrixAdd_omp.exe -fopenmp`
+- Linux(GCC): `g++ matrixAdd_omp.cpp -o matrixAdd_omp -std=c++11 -fopenmp`
+- Windows(MinGW): `g++ matrixAdd_omp.cpp -o matrixAdd_omp.exe -std=c++11 -fopenmp`
 
 ## Program arguments
 **Note that all arguments have default values, which means they are all optional.**
