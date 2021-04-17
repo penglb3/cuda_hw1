@@ -19,6 +19,7 @@ For OpenMP:
 - Windows(MinGW): `g++ matrixAdd_omp.cpp -o matrixAdd_omp.exe -fopenmp`
 
 ## Program arguments
+**Note that all arguments have default values, which means they are all optional.**
 For CUDA (`matrixAdd_cuda`)
 - `-r [rows of matrix]`
 - `-c [columns of matrix]`
@@ -31,3 +32,6 @@ For OpenMP (`matrixAdd_omp`)
 - `-r [rows of matrix]`
 - `-c [columns of matrix]`
 - `-t [number of CPU threads]`
+
+## Note
+The code is tested under Windows Environment, so I can't guarantee it will compile or run without problem under Linux. Should I get access to Linux environment, I will test these code and (hopefully, if I don't forget XD) update this manual.
