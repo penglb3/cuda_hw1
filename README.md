@@ -1,9 +1,10 @@
-# cuda_hw1
-My CUDA Homework 1 Full Code [For TA and teachers]
+# CUDA Homework 1 Full Code
+P's CUDA Homework 1 Full Code [For TA and teachers]
 
 ## Requirements
 For CUDA: 
 - nvcc
+
 For OpenMP:
 - GCC (presumably, because MSVC is stuck with OpenMP 2.0!) 
 
@@ -20,6 +21,7 @@ For OpenMP:
 
 ## Program arguments
 **Note that all arguments have default values, which means they are all optional.**
+
 For CUDA (`matrixAdd_cuda`)
 - `-r [rows of matrix]`
 - `-c [columns of matrix]`
