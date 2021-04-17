@@ -3,7 +3,6 @@
 #include <omp.h>
 #include <cmath>
 #include <ctime>
-#include <chrono>
 #ifdef _WIN32
 #include "getopt.hpp"
 #else 
@@ -11,17 +10,14 @@
 #endif
 
 #define MAX(x, y) ((x)>(y)?(x):(y))
-
-typedef std::chrono::high_resolution_clock Clock;
-auto t1 = Clock::now(), t2 = Clock::now();
-
-#define TIME_IT_START t1 = Clock::now();
+clock_t cpu_startTime, cpu_endTime;
+float milliseconds = 0;
+#define TIME_IT_START cpu_startTime = clock();
 
 #define TIME_IT_STOP \
-{\
-    t2 = Clock::now();\
-    printf("Time Elapsed: %f(ms)\n", (t2 - t1)/100000.0);\
-}
+    cpu_endTime = clock();\
+    milliseconds = ((cpu_endTime - cpu_startTime) / (double) CLOCKS_PER_SEC * 1000 / average_over);\
+    printf("Time Elapsed: %.3f(ms)\n", milliseconds);
 
 void verify_add(const float* h_A, const float* h_B, const float* h_C, const int numElements){
     float max_error = 0;
@@ -39,12 +35,13 @@ void verify_add(const float* h_A, const float* h_B, const float* h_C, const int 
 
 int main(int argc, char* argv[]){
     char c;
-    int n_rows = 8320, n_cols = 5000, num_threads = 8;
-    while((c = getopt(argc, argv, "r:c:t:"))!=-1)
+    int n_rows = 8320, n_cols = 5000, num_threads = 8, average_over = 1;
+    while((c = getopt(argc, argv, "r:c:t:a:"))!=-1)
         switch(c){
             case 't': num_threads = atoi(optarg);break;
             case 'r': n_rows = atoi(optarg);break;
             case 'c': n_cols = atoi(optarg);break;
+            case 'a': average_over = atoi(optarg);break;
             default : abort();
         }
     size_t numElements = n_rows * n_cols;
@@ -74,18 +71,20 @@ int main(int argc, char* argv[]){
 
     printf("\nCPU sequential addition\n");
     TIME_IT_START
-    for (int i = 0; i < numElements; ++i){
-        h_C[i] = h_A[i] + h_B[i];
-    }
+    for (int a = 0; a < average_over; ++a)
+        for (int i = 0; i < numElements; ++i){
+            h_C[i] = h_A[i] + h_B[i];
+        }
     TIME_IT_STOP
     verify_add(h_A, h_B, h_C, numElements);
     
     printf("\nCPU parallel addition with %d OpenMP threads\n", num_threads);
     TIME_IT_START
-#pragma omp parallel for num_threads(num_threads) schedule(static)
-    for (int i = 0; i < numElements; ++i){
-        h_C[i] = h_A[i] + h_B[i];
-    }
+    for (int a = 0; a < average_over; ++a)
+    #pragma omp parallel for num_threads(num_threads) schedule(static)
+        for (int i = 0; i < numElements; ++i){
+            h_C[i] = h_A[i] + h_B[i];
+        }
     TIME_IT_STOP
     verify_add(h_A, h_B, h_C, numElements);
 
