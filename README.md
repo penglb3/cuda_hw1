@@ -34,6 +34,7 @@ For OpenMP (`matrixAdd_omp`)
 - `-r [rows of matrix]`
 - `-c [columns of matrix]`
 - `-t [number of CPU threads]`
+- `-a [time to repeat]`
 
 ## Note
 The code is tested under Windows Environment, so I can't guarantee it will compile or run without problem under Linux. Should I get access to Linux environment, I will test these code and (hopefully, if I don't forget XD) update this manual.
