@@ -3,6 +3,7 @@
 #include <omp.h>
 #include <cmath>
 #include <ctime>
+#include <chrono>
 #ifdef _WIN32
 #include "getopt.hpp"
 #else 
@@ -10,14 +11,16 @@
 #endif
 
 #define MAX(x, y) ((x)>(y)?(x):(y))
-clock_t cpu_startTime, cpu_endTime;
-#define TIME_IT_START cpu_startTime = clock();
+
+typedef std::chrono::high_resolution_clock Clock;
+auto t1 = Clock::now(), t2 = Clock::now();
+
+#define TIME_IT_START t1 = Clock::now();
 
 #define TIME_IT_STOP \
 {\
-    cpu_endTime = clock();\
-    float milliseconds = ((cpu_endTime - cpu_startTime) / (double) CLOCKS_PER_SEC * 1000);\
-    printf("Time Elapsed: %.3f(ms)\n", milliseconds);\
+    t2 = Clock::now();\
+    printf("Time Elapsed: %f(ms)\n", (t2 - t1)/100000.0);\
 }
 
 void verify_add(const float* h_A, const float* h_B, const float* h_C, const int numElements){
