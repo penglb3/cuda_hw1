@@ -34,8 +34,11 @@ void verify_add(const float* h_A, const float* h_B, const float* h_C, const int 
 }
 
 int main(int argc, char* argv[]){
+    // Define program parameters and their default values
     char c;
     int n_rows = 8320, n_cols = 5000, num_threads = 8, average_over = 1;
+    
+    // Get parameters from arguments (if provided)
     while((c = getopt(argc, argv, "r:c:t:a:"))!=-1)
         switch(c){
             case 't': num_threads = atoi(optarg);break;
@@ -44,11 +47,19 @@ int main(int argc, char* argv[]){
             case 'a': average_over = atoi(optarg);break;
             default : abort();
         }
-    size_t numElements = n_rows * n_cols;
-    size_t n_bytes = numElements * sizeof(float);
+    
+    // Print information about OpenMP environment.
     printf("===== (18340136) PLB's program.  =====\n");
     printf("===== OpenMP Version %d.     =====\n", _OPENMP);
+    
+    // Print the matrix size to be used, and compute its n_bytes
+    size_t numElements = n_rows * n_cols;
+    size_t n_bytes = numElements * sizeof(float);
     printf("Matrix addition of size %d*%d (=%d) elements.\n", n_rows, n_cols, numElements);
+    
+    /****************************************************************
+    * Memory allocation and initialzation.
+    ****************************************************************/
     // Allocate the host input vector A
     float *h_A = (float *)malloc(n_bytes);
     // Allocate the host input vector B
@@ -68,7 +79,10 @@ int main(int argc, char* argv[]){
         h_A[i] = rand()/(float)RAND_MAX;
         h_B[i] = rand()/(float)RAND_MAX;
     }
-
+    
+    /****************************************************************
+    * TEST: CPU sequential addition.
+    ****************************************************************/
     printf("\nCPU sequential addition\n");
     TIME_IT_START
     for (int a = 0; a < average_over; ++a)
@@ -77,7 +91,9 @@ int main(int argc, char* argv[]){
         }
     TIME_IT_STOP
     verify_add(h_A, h_B, h_C, numElements);
-    
+    /****************************************************************
+    * TEST: CPU OpenMP parallel addition.
+    ****************************************************************/
     printf("\nCPU parallel addition with %d OpenMP threads\n", num_threads);
     TIME_IT_START
     for (int a = 0; a < average_over; ++a)
@@ -87,7 +103,8 @@ int main(int argc, char* argv[]){
         }
     TIME_IT_STOP
     verify_add(h_A, h_B, h_C, numElements);
-
+    
+    // Clean Up.
     free(h_A);
     free(h_B);
     free(h_C);
