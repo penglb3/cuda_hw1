@@ -1,5 +1,5 @@
 # CUDA Homework 1 Full Code
-P's CUDA Homework 1 Full Code [For TA and teachers]
+P's CUDA Homework 1 Full Code [Public Version]
 
 ## Requirements
 For CUDA: 
@@ -37,4 +37,4 @@ For OpenMP (`matrixAdd_omp`)
 - `-a [time to repeat]`
 
 ## Note
-The code is tested under Windows Environment, so I can't guarantee it will compile or run without problem under Linux. Should I get access to Linux environment, I will test these code and (hopefully, if I don't forget XD) update this manual.
+The code is tested under Windows Environment, so I can't guarantee it will compile or run without problem under Linux. 
